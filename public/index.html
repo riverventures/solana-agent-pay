@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solana Agent Pay — Crypto-Native Payments for AI Agents</title>
+<meta name="description" content="Pay for AI APIs with USDC on Solana. The missing payment layer for autonomous agents.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0a;--surface:#111;--surface2:#1a1a1a;--border:#222;--text:#e0e0e0;--muted:#888;--purple:#9945ff;--green:#14f195;--grad:linear-gradient(135deg,#9945ff,#14f195)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;overflow-x:hidden;font-size:15px}
+a{color:var(--green);text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:1100px;margin:0 auto;padding:0 16px}
+.gradient-text{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.badge{display:inline-block;padding:4px 12px;border:1px solid var(--purple);border-radius:100px;font-size:.7rem;color:var(--purple);margin-bottom:12px;letter-spacing:.5px}
+
+/* Hero */
+.hero{padding:48px 0 32px;text-align:center;position:relative}
+.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:400px;height:400px;background:radial-gradient(circle,rgba(153,69,255,.08),transparent 70%);pointer-events:none}
+.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+.hero .subtitle{font-size:clamp(.95rem,2vw,1.15rem);color:var(--muted);max-width:520px;margin:0 auto 20px}
+.hero-cta{display:inline-flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.hero-cta a{padding:10px 24px;border-radius:8px;font-weight:600;font-size:.9rem;transition:opacity .2s}
+.btn-primary{background:var(--grad);color:#000}
+.btn-secondary{border:1px solid var(--border);color:var(--text);background:var(--surface)}
+.btn-primary:hover,.btn-secondary:hover{opacity:.85;text-decoration:none}
+
+/* Sections */
+section{padding:28px 0}
+.section-label{font-size:.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--purple);margin-bottom:6px}
+.section-title{font-size:clamp(1.3rem,3vw,1.8rem);font-weight:700;margin-bottom:16px}
+
+/* Problem + Why Solana side by side */
+.dual-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.problem-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.problem-card .icon{font-size:1.2rem;margin-bottom:4px}
+.problem-card h3{font-size:.85rem;margin-bottom:2px}
+.problem-card p{color:var(--muted);font-size:.78rem;line-height:1.4}
+
+/* Steps - horizontal */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.step{text-align:center;padding:16px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--grad);color:#000;font-weight:800;font-size:.85rem;display:inline-flex;align-items:center;justify-content:center;margin-bottom:8px}
+.step h3{font-size:.9rem;margin-bottom:4px}
+.step p{color:var(--muted);font-size:.78rem;line-height:1.3}
+
+/* Architecture */
+.arch{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 16px;overflow-x:auto}
+.arch-diagram{display:flex;align-items:center;justify-content:center;gap:0;min-width:600px;font-size:.8rem}
+.arch-box{padding:14px 16px;border-radius:8px;text-align:center;white-space:nowrap;font-weight:600;font-size:.8rem}
+.arch-agent{background:linear-gradient(135deg,rgba(153,69,255,.15),rgba(153,69,255,.05));border:1px solid rgba(153,69,255,.3)}
+.arch-proxy{background:linear-gradient(135deg,rgba(153,69,255,.1),rgba(20,241,149,.1));border:1px solid rgba(20,241,149,.3)}
+.arch-llm{background:linear-gradient(135deg,rgba(20,241,149,.15),rgba(20,241,149,.05));border:1px solid rgba(20,241,149,.3)}
+.arch-arrow{padding:0 8px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.6rem}
+.arch-arrow .line{color:var(--green);font-size:1rem}
+
+/* Why Solana */
+.sol-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sol-card{padding:12px 14px;border-radius:8px;background:var(--surface);border:1px solid var(--border)}
+.sol-card .val{font-size:1.1rem;font-weight:800;margin-bottom:0}
+.sol-card .label{color:var(--muted);font-size:.75rem}
+
+/* Competitor */
+.comp-table{width:100%;border-collapse:collapse;font-size:.8rem}
+.comp-table th,.comp-table td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border)}
+.comp-table th{color:var(--muted);font-weight:500;font-size:.7rem;text-transform:uppercase;letter-spacing:1px}
+.comp-table td:first-child{font-weight:600}
+.comp-table tr:last-child td{border-bottom:none}
+.check{color:var(--green)}
+.cross{color:#f14668}
+
+/* Code */
+.code-block{background:#0d0d0d;border:1px solid var(--border);border-radius:10px;padding:16px;overflow-x:auto;font-size:.75rem;line-height:1.7}
+.code-block pre{font-family:'SF Mono',Consolas,'Courier New',monospace;color:#ccc}
+.code-block .kw{color:var(--purple)}
+.code-block .fn{color:var(--green)}
+.code-block .str{color:#f5a623}
+.code-block .cmt{color:#555}
+
+/* Two-col layout */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+
+/* Footer */
+footer{border-top:1px solid var(--border);padding:20px 0;text-align:center;color:var(--muted);font-size:.8rem}
+
+@media(max-width:768px){
+  .dual-grid,.two-col{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  .problem-grid,.sol-grid{grid-template-columns:1fr 1fr}
+  .hero{padding:36px 0 24px}
+  section{padding:20px 0}
+  .arch-diagram{min-width:0;flex-wrap:wrap;gap:8px}
+  .arch-arrow{transform:rotate(90deg);padding:2px 0}
+}
+@media(max-width:480px){
+  .problem-grid{grid-template-columns:1fr}
+  .sol-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+<div class="container">
+  <div class="badge">Building on Solana</div>
+  <h1><span class="gradient-text">Solana Agent Pay</span></h1>
+  <p class="subtitle">Pay for AI APIs with USDC. The missing payment layer for autonomous agents.</p>
+  <div class="hero-cta">
+    <a href="https://github.com/riverventures/solana-agent-pay" class="btn-primary" target="_blank">View on GitHub →</a>
+    <a href="#how-it-works" class="btn-secondary">How It Works</a>
+  </div>
+</div>
+</section>
+
+<!-- Problem + Why Solana side by side -->
+<section>
+<div class="container">
+  <div class="dual-grid">
+    <div>
+      <p class="section-label">The Problem</p>
+      <h2 class="section-title">AI agents can't pay for anything</h2>
+      <div class="problem-grid">
+        <div class="problem-card">
+          <div class="icon">💳</div>
+          <h3>Credit Cards Required</h3>
+          <p>Every LLM provider requires a credit card. Agents can't hold one.</p>
+        </div>
+        <div class="problem-card">
+          <div class="icon">🤖</div>
+          <h3>24/7 Operation</h3>
+          <p>Agents run autonomously but can't manage their own compute spend.</p>
+        </div>
+        <div class="problem-card">
+          <div class="icon">🏦</div>
+          <h3>No Bank Accounts</h3>
+          <p>Agents can't open accounts, sign contracts, or hold financial instruments.</p>
+        </div>
+        <div class="problem-card">
+          <div class="icon">⚡</div>
+          <h3>Nothing on Solana</h3>
+          <p>No crypto-native payment layer for AI agent compute. We're first.</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="section-label">Why Solana</p>
+      <h2 class="section-title">Built for speed and cost</h2>
+      <div class="sol-grid">
+        <div class="sol-card">
+          <div class="val gradient-text">&lt;1s</div>
+          <div class="label">Transaction finality</div>
+        </div>
+        <div class="sol-card">
+          <div class="val gradient-text">$0.0002</div>
+          <div class="label">Average tx fee</div>
+        </div>
+        <div class="sol-card">
+          <div class="val gradient-text">Token-2022</div>
+          <div class="label">Transfer hooks for auto-deduction</div>
+        </div>
+        <div class="sol-card">
+          <div class="val gradient-text">SPL Stream</div>
+          <div class="label">Real-time payment streams</div>
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <p class="section-label" style="margin-top:16px">Landscape</p>
+        <h2 class="section-title">First mover on Solana</h2>
+        <div style="overflow-x:auto">
+        <table class="comp-table">
+          <thead>
+            <tr><th></th><th>Agent Pay</th><th>ChainHop</th><th>Traditional</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Chain</td><td><span class="check">Solana</span></td><td>ETH only</td><td>N/A</td></tr>
+            <tr><td>Settlement</td><td><span class="check">&lt;1s</span></td><td>~12s</td><td>Days</td></tr>
+            <tr><td>Tx Cost</td><td><span class="check">$0.0002</span></td><td>$2-20+</td><td>2-3%</td></tr>
+            <tr><td>Agent-Native</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td></tr>
+            <tr><td>USDC</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- How It Works + Architecture -->
+<section id="how-it-works" style="background:var(--surface2)">
+<div class="container">
+  <p class="section-label">How It Works</p>
+  <h2 class="section-title">Three steps. Fully autonomous.</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Deposit USDC</h3>
+      <p>Agent deposits USDC into a program-owned vault on Solana. Funds held in escrow.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Make API Calls</h3>
+      <p>Agent sends requests through Agent Pay proxy to any LLM provider.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Auto-Deduct</h3>
+      <p>Usage metered, costs auto-deducted from agent's USDC balance on-chain.</p>
+    </div>
+  </div>
+  <div style="margin-top:16px">
+    <div class="arch">
+      <div class="arch-diagram">
+        <div class="arch-box arch-agent">🤖 AI Agent</div>
+        <div class="arch-arrow">
+          <span style="font-size:.6rem;opacity:.7">USDC →</span>
+          <span class="line">―――→</span>
+          <span style="font-size:.6rem;opacity:.7">← API key</span>
+        </div>
+        <div class="arch-box arch-proxy">⚡ Agent Pay Proxy<br><small style="opacity:.6">Solana Program</small></div>
+        <div class="arch-arrow">
+          <span style="font-size:.6rem;opacity:.7">Fiat →</span>
+          <span class="line">―――→</span>
+          <span style="font-size:.6rem;opacity:.7">← Response</span>
+        </div>
+        <div class="arch-box arch-llm">🧠 LLM Providers<br><small style="opacity:.6">OpenAI · Anthropic · Google</small></div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- Code -->
+<section>
+<div class="container">
+  <p class="section-label">Developer Experience</p>
+  <h2 class="section-title">Simple integration</h2>
+  <div class="code-block"><pre><span class="cmt">// 1. Deposit USDC to your agent vault</span>
+<span class="kw">const</span> vault = <span class="kw">await</span> <span class="fn">agentPay.createVault</span>({
+  agent: agentKeypair.<span class="fn">publicKey</span>,
+  depositAmount: <span class="fn">usdcToLamports</span>(<span class="str">100</span>),  <span class="cmt">// $100 USDC</span>
+});
+
+<span class="cmt">// 2. Make API calls — usage auto-deducted</span>
+<span class="kw">const</span> response = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">"https://proxy.agentpay.sol/v1/chat/completions"</span>, {
+  headers: { <span class="str">"Authorization"</span>: <span class="str">`Bearer ${</span>vault.apiKey<span class="str">}`</span> },
+  method: <span class="str">"POST"</span>,
+  body: JSON.<span class="fn">stringify</span>({
+    model: <span class="str">"gpt-4"</span>,
+    messages: [{ role: <span class="str">"user"</span>, content: <span class="str">"Hello from an autonomous agent!"</span> }],
+  }),
+});
+
+<span class="cmt">// 3. Check balance</span>
+<span class="kw">const</span> balance = <span class="kw">await</span> <span class="fn">agentPay.getBalance</span>(vault.address);
+console.<span class="fn">log</span>(<span class="str">`Remaining: $${balance} USDC`</span>);</pre></div>
+</div>
+</section>
+
+<!-- Footer -->
+<footer>
+<div class="container">
+  <p><span class="gradient-text" style="font-weight:700">Solana Agent Pay</span> · <a href="https://github.com/riverventures/solana-agent-pay" target="_blank">GitHub</a> · Built on Solana</p>
+</div>
+</footer>
+
+</body>
+</html>
