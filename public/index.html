@@ -47,14 +47,18 @@ section{padding:28px 0}
 .step p{color:var(--muted);font-size:.78rem;line-height:1.3}
 
 /* Architecture */
-.arch{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 16px;overflow-x:auto}
-.arch-diagram{display:flex;align-items:center;justify-content:center;gap:0;min-width:600px;font-size:.8rem}
-.arch-box{padding:14px 16px;border-radius:8px;text-align:center;white-space:nowrap;font-weight:600;font-size:.8rem}
+.arch{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 16px}
+.arch-flow{display:flex;align-items:center;justify-content:center;gap:0;font-size:.8rem;flex-wrap:nowrap}
+.arch-box{padding:14px 16px;border-radius:8px;text-align:center;font-weight:600;font-size:.8rem;flex-shrink:0}
 .arch-agent{background:linear-gradient(135deg,rgba(153,69,255,.15),rgba(153,69,255,.05));border:1px solid rgba(153,69,255,.3)}
 .arch-proxy{background:linear-gradient(135deg,rgba(153,69,255,.1),rgba(20,241,149,.1));border:1px solid rgba(20,241,149,.3)}
 .arch-llm{background:linear-gradient(135deg,rgba(20,241,149,.15),rgba(20,241,149,.05));border:1px solid rgba(20,241,149,.3)}
-.arch-arrow{padding:0 8px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.6rem}
-.arch-arrow .line{color:var(--green);font-size:1rem}
+.arch-label{padding:0 6px;color:var(--muted);font-size:.6rem;text-align:center;white-space:nowrap}
+@media(max-width:768px){
+  .arch-flow{flex-direction:column;gap:4px}
+  .arch-box{width:100%}
+  .arch-label{padding:2px 0}
+}
 
 /* Why Solana */
 .sol-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -91,8 +95,6 @@ footer{border-top:1px solid var(--border);padding:20px 0;text-align:center;color
   .problem-grid,.sol-grid{grid-template-columns:1fr 1fr}
   .hero{padding:36px 0 24px}
   section{padding:20px 0}
-  .arch-diagram{min-width:0;flex-wrap:wrap;gap:8px}
-  .arch-arrow{transform:rotate(90deg);padding:2px 0}
 }
 @media(max-width:480px){
   .problem-grid{grid-template-columns:1fr}
@@ -217,20 +219,12 @@ footer{border-top:1px solid var(--border);padding:20px 0;text-align:center;color
   </div>
   <div style="margin-top:16px">
     <div class="arch">
-      <div class="arch-diagram">
-        <div class="arch-box arch-agent">🤖 AI Agent</div>
-        <div class="arch-arrow">
-          <span style="font-size:.6rem;opacity:.7">USDC →</span>
-          <span class="line">―――→</span>
-          <span style="font-size:.6rem;opacity:.7">← API key</span>
-        </div>
-        <div class="arch-box arch-proxy">⚡ Agent Pay Proxy<br><small style="opacity:.6">Solana Program</small></div>
-        <div class="arch-arrow">
-          <span style="font-size:.6rem;opacity:.7">Fiat →</span>
-          <span class="line">―――→</span>
-          <span style="font-size:.6rem;opacity:.7">← Response</span>
-        </div>
-        <div class="arch-box arch-llm">🧠 LLM Providers<br><small style="opacity:.6">OpenAI · Anthropic · Google</small></div>
+      <div class="arch-flow">
+        <div class="arch-box arch-agent">AI Agent</div>
+        <div class="arch-label">USDC → / ← API key</div>
+        <div class="arch-box arch-proxy">Agent Pay Proxy<br><small style="opacity:.6">Solana Program</small></div>
+        <div class="arch-label">Fiat → / ← Response</div>
+        <div class="arch-box arch-llm">LLM Providers<br><small style="opacity:.6">OpenAI · Anthropic · Google</small></div>
       </div>
     </div>
   </div>
