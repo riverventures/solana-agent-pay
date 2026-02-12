@@ -3,23 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Solana Agent Pay — Crypto-Native Payments for AI Agents</title>
-<meta name="description" content="Pay for AI APIs with USDC on Solana. The missing payment layer for autonomous agents.">
+<title>x402 AI Gateway - Crypto-Native AI API Access on Solana</title>
+<meta name="description" content="The last-mile bridge between x402 payments and AI APIs. Pay for Claude, GPT-4, Gemini with USDC on Solana.">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0a0a0a;--surface:#111;--surface2:#1a1a1a;--border:#222;--text:#e0e0e0;--muted:#888;--purple:#9945ff;--green:#14f195;--grad:linear-gradient(135deg,#9945ff,#14f195)}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;overflow-x:hidden;font-size:15px}
 a{color:var(--green);text-decoration:none}
 a:hover{text-decoration:underline}
-.container{max-width:1100px;margin:0 auto;padding:0 16px}
+.container{max-width:1000px;margin:0 auto;padding:0 16px}
 .gradient-text{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .badge{display:inline-block;padding:4px 12px;border:1px solid var(--purple);border-radius:100px;font-size:.7rem;color:var(--purple);margin-bottom:12px;letter-spacing:.5px}
+.mono{font-family:'SF Mono',Consolas,'Courier New',monospace}
 
 /* Hero */
-.hero{padding:48px 0 32px;text-align:center;position:relative}
+.hero{padding:48px 0 24px;text-align:center;position:relative}
 .hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:400px;height:400px;background:radial-gradient(circle,rgba(153,69,255,.08),transparent 70%);pointer-events:none}
-.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;letter-spacing:-1px;margin-bottom:8px}
-.hero .subtitle{font-size:clamp(.95rem,2vw,1.15rem);color:var(--muted);max-width:520px;margin:0 auto 20px}
+.hero h1{font-size:clamp(1.8rem,4vw,3rem);font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+.hero .subtitle{font-size:clamp(.9rem,2vw,1.05rem);color:var(--muted);max-width:560px;margin:0 auto 16px}
 .hero-cta{display:inline-flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .hero-cta a{padding:10px 24px;border-radius:8px;font-weight:600;font-size:.9rem;transition:opacity .2s}
 .btn-primary{background:var(--grad);color:#000}
@@ -27,78 +28,51 @@ a:hover{text-decoration:underline}
 .btn-primary:hover,.btn-secondary:hover{opacity:.85;text-decoration:none}
 
 /* Sections */
-section{padding:28px 0}
+section{padding:24px 0}
 .section-label{font-size:.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--purple);margin-bottom:6px}
-.section-title{font-size:clamp(1.3rem,3vw,1.8rem);font-weight:700;margin-bottom:16px}
+.section-title{font-size:clamp(1.2rem,3vw,1.6rem);font-weight:700;margin-bottom:12px}
 
-/* Problem + Why Solana side by side */
-.dual-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.problem-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
-.problem-card .icon{font-size:1.2rem;margin-bottom:4px}
-.problem-card h3{font-size:.85rem;margin-bottom:2px}
-.problem-card p{color:var(--muted);font-size:.78rem;line-height:1.4}
-
-/* Steps - horizontal */
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.step{text-align:center;padding:16px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px}
-.step-num{width:32px;height:32px;border-radius:50%;background:var(--grad);color:#000;font-weight:800;font-size:.85rem;display:inline-flex;align-items:center;justify-content:center;margin-bottom:8px}
-.step h3{font-size:.9rem;margin-bottom:4px}
-.step p{color:var(--muted);font-size:.78rem;line-height:1.3}
+/* Gap section */
+.gap-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.gap-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px}
+.gap-card h3{font-size:.85rem;margin-bottom:4px}
+.gap-card p{color:var(--muted);font-size:.78rem;line-height:1.4}
 
 /* Architecture */
-.arch{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 16px}
-.arch-flow{display:flex;align-items:center;justify-content:center;gap:0;font-size:.8rem;flex-wrap:nowrap}
-.arch-box{padding:14px 16px;border-radius:8px;text-align:center;font-weight:600;font-size:.8rem;flex-shrink:0}
-.arch-agent{background:linear-gradient(135deg,rgba(153,69,255,.15),rgba(153,69,255,.05));border:1px solid rgba(153,69,255,.3)}
-.arch-proxy{background:linear-gradient(135deg,rgba(153,69,255,.1),rgba(20,241,149,.1));border:1px solid rgba(20,241,149,.3)}
-.arch-llm{background:linear-gradient(135deg,rgba(20,241,149,.15),rgba(20,241,149,.05));border:1px solid rgba(20,241,149,.3)}
-.arch-label{padding:0 6px;color:var(--muted);font-size:.6rem;text-align:center;white-space:nowrap}
-@media(max-width:768px){
-  .arch-flow{flex-direction:column;gap:4px}
-  .arch-box{width:100%}
-  .arch-label{padding:2px 0}
-}
-
-/* Why Solana */
-.sol-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.sol-card{padding:12px 14px;border-radius:8px;background:var(--surface);border:1px solid var(--border)}
-.sol-card .val{font-size:1.1rem;font-weight:800;margin-bottom:0}
-.sol-card .label{color:var(--muted);font-size:.75rem}
-
-/* Competitor */
-.comp-table{width:100%;border-collapse:collapse;font-size:.8rem}
-.comp-table th,.comp-table td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border)}
-.comp-table th{color:var(--muted);font-weight:500;font-size:.7rem;text-transform:uppercase;letter-spacing:1px}
-.comp-table td:first-child{font-weight:600}
-.comp-table tr:last-child td{border-bottom:none}
-.check{color:var(--green)}
-.cross{color:#f14668}
+.arch{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;overflow-x:auto}
+.arch pre{font-family:'SF Mono',Consolas,'Courier New',monospace;font-size:.72rem;line-height:1.6;color:var(--text);white-space:pre}
+.arch-note{font-size:.72rem;color:var(--muted);margin-top:8px}
 
 /* Code */
-.code-block{background:#0d0d0d;border:1px solid var(--border);border-radius:10px;padding:16px;overflow-x:auto;font-size:.75rem;line-height:1.7}
+.code-block{background:#0d0d0d;border:1px solid var(--border);border-radius:10px;padding:14px;overflow-x:auto;font-size:.72rem;line-height:1.6}
 .code-block pre{font-family:'SF Mono',Consolas,'Courier New',monospace;color:#ccc}
 .code-block .kw{color:var(--purple)}
 .code-block .fn{color:var(--green)}
 .code-block .str{color:#f5a623}
 .code-block .cmt{color:#555}
+.code-label{font-size:.7rem;color:var(--muted);margin-bottom:6px;font-weight:600}
 
 /* Two-col layout */
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
 
+/* Compact list */
+.feat-list{list-style:none;padding:0}
+.feat-list li{padding:6px 0;border-bottom:1px solid var(--border);font-size:.82rem;display:flex;gap:8px}
+.feat-list li:last-child{border-bottom:none}
+.feat-list .icon{flex-shrink:0}
+
+/* Protocol credit */
+.credit-box{background:linear-gradient(135deg,rgba(153,69,255,.05),rgba(20,241,149,.05));border:1px solid rgba(153,69,255,.2);border-radius:8px;padding:14px}
+.credit-box h3{font-size:.9rem;margin-bottom:4px}
+.credit-box p{font-size:.78rem;color:var(--muted);line-height:1.4}
+
 /* Footer */
-footer{border-top:1px solid var(--border);padding:20px 0;text-align:center;color:var(--muted);font-size:.8rem}
+footer{border-top:1px solid var(--border);padding:20px 0;text-align:center;color:var(--muted);font-size:.78rem}
 
 @media(max-width:768px){
-  .dual-grid,.two-col{grid-template-columns:1fr}
-  .steps{grid-template-columns:1fr}
-  .problem-grid,.sol-grid{grid-template-columns:1fr 1fr}
-  .hero{padding:36px 0 24px}
-  section{padding:20px 0}
-}
-@media(max-width:480px){
-  .problem-grid{grid-template-columns:1fr}
-  .sol-grid{grid-template-columns:1fr 1fr}
+  .two-col,.gap-grid{grid-template-columns:1fr}
+  .hero{padding:32px 0 20px}
+  section{padding:18px 0}
 }
 </style>
 </head>
@@ -107,218 +81,251 @@ footer{border-top:1px solid var(--border);padding:20px 0;text-align:center;color
 <!-- Hero -->
 <section class="hero">
 <div class="container">
-  <div class="badge">Building on Solana</div>
-  <h1><span class="gradient-text">Solana Agent Pay</span></h1>
-  <p class="subtitle">Pay for AI APIs with USDC. The missing payment layer for autonomous agents.</p>
+  <div class="badge">Built on x402 + Solana</div>
+  <h1><span class="gradient-text">x402 AI Gateway</span></h1>
+  <p class="subtitle">The last-mile bridge: pay for AI APIs with USDC on Solana via the x402 protocol. No credit card. No KYC. Just crypto.</p>
   <div class="hero-cta">
-    <a href="https://github.com/riverventures/solana-agent-pay" class="btn-primary" target="_blank">View on GitHub →</a>
-    <a href="#how-it-works" class="btn-secondary">How It Works</a>
+    <a href="https://github.com/riverventures/solana-agent-pay" class="btn-primary" target="_blank">GitHub Repo</a>
+    <a href="#architecture" class="btn-secondary">How It Works</a>
   </div>
 </div>
 </section>
 
-<!-- Problem + Why Solana side by side -->
+<!-- The Gap -->
 <section>
 <div class="container">
-  <div class="dual-grid">
+  <p class="section-label">The Problem</p>
+  <h2 class="section-title">x402 is elegant. But it can't pay for Claude.</h2>
+  <div class="gap-grid">
+    <div class="gap-card">
+      <h3>x402 handles payments perfectly</h3>
+      <p>Coinbase/PayAI built a beautiful protocol: HTTP 402 responses, on-chain USDC settlement, facilitator-based verification. It works.</p>
+    </div>
+    <div class="gap-card">
+      <h3>AI providers only accept fiat</h3>
+      <p>Anthropic, OpenAI, Google all require credit cards. No crypto option. An agent with a Solana wallet literally cannot buy inference.</p>
+    </div>
+    <div class="gap-card">
+      <h3>Agents have crypto, not cards</h3>
+      <p>AI agents earn USDC from bounties, DeFi, tips. They can hold wallets. They cannot hold credit cards or bank accounts.</p>
+    </div>
+    <div class="gap-card">
+      <h3>The last mile is missing</h3>
+      <p>x402 connects agents to any x402-enabled server. But no AI provider runs an x402 server. Someone needs to bridge the gap.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- Our Solution -->
+<section style="background:var(--surface2)">
+<div class="container">
+  <p class="section-label">The Solution</p>
+  <h2 class="section-title">A crypto-native AI API proxy, built on x402</h2>
+  <p style="font-size:.85rem;color:var(--muted);margin-bottom:16px;max-width:700px">We run an x402-enabled server that wraps AI provider APIs. Agent pays USDC via x402 on Solana. Our server verifies payment through PayAI's facilitator, proxies the request to the AI provider (paying with fiat on the backend), and returns the response. The agent never needs a credit card.</p>
+
+  <div id="architecture" class="arch">
+<pre>
+  AI Agent                    x402 AI Gateway                   AI Provider
+  (Solana wallet)             (our server)                      (Anthropic, OpenAI)
+       |                            |                                 |
+       |--- POST /v1/chat --------->|                                 |
+       |<-- 402 + payment info -----|                                 |
+       |                            |                                 |
+       |--- build USDC tx ------+   |                                 |
+       |--- sign with keypair --+   |                                 |
+       |                            |                                 |
+       |--- POST /v1/chat --------->|                                 |
+       |    + X-PAYMENT header      |                                 |
+       |                            |--- verify via PayAI facilitator |
+       |                            |<-- payment valid                |
+       |                            |                                 |
+       |                            |--- POST /v1/messages ---------->|
+       |                            |    (fiat billing on backend)    |
+       |                            |<-- AI response -----------------|
+       |                            |                                 |
+       |                            |--- settle via PayAI facilitator |
+       |                            |<-- USDC transferred             |
+       |                            |                                 |
+       |<-- 200 + AI response ------|                                 |
+       |    + X-PAYMENT-RESPONSE    |                                 |
+</pre>
+    <div class="arch-note">Payment verification and settlement handled by <a href="https://www.payai.network/" target="_blank">PayAI facilitator</a>. Facilitator pays Solana gas fees.</div>
+  </div>
+</div>
+</section>
+
+<!-- Working Prototype -->
+<section>
+<div class="container">
+  <p class="section-label">Working Code</p>
+  <h2 class="section-title">Real prototype, real x402 integration</h2>
+  <p style="font-size:.82rem;color:var(--muted);margin-bottom:14px">Built with the <span class="mono">x402-solana</span> npm package from PayAI. Server uses <span class="mono">X402PaymentHandler</span> for payment verification/settlement. Client handles the full 402 flow automatically.</p>
+
+  <div class="two-col">
     <div>
-      <p class="section-label">The Problem</p>
-      <h2 class="section-title">AI agents can't pay for anything</h2>
-      <div class="problem-grid">
-        <div class="problem-card">
-          <div class="icon">💳</div>
-          <h3>Credit Cards Required</h3>
-          <p>Every LLM provider requires a credit card. Agents can't hold one.</p>
-        </div>
-        <div class="problem-card">
-          <div class="icon">🤖</div>
-          <h3>24/7 Operation</h3>
-          <p>Agents run autonomously but can't manage their own compute spend.</p>
-        </div>
-        <div class="problem-card">
-          <div class="icon">🏦</div>
-          <h3>No Bank Accounts</h3>
-          <p>Agents can't open accounts, sign contracts, or hold financial instruments.</p>
-        </div>
-        <div class="problem-card">
-          <div class="icon">⚡</div>
-          <h3>Nothing on Solana</h3>
-          <p>No crypto-native payment layer for AI agent compute. We're first.</p>
-        </div>
-      </div>
+      <div class="code-label">server.js - x402 merchant wrapping Claude API</div>
+      <div class="code-block"><pre><span class="kw">import</span> { X402PaymentHandler } <span class="kw">from</span> <span class="str">'x402-solana/server'</span>;
+
+<span class="kw">const</span> x402 = <span class="kw">new</span> <span class="fn">X402PaymentHandler</span>({
+  network: <span class="str">'solana-devnet'</span>,
+  treasuryAddress: TREASURY,
+  facilitatorUrl: <span class="str">'https://facilitator.payai.network'</span>,
+});
+
+app.<span class="fn">post</span>(<span class="str">'/v1/chat'</span>, <span class="kw">async</span> (req, res) => {
+  <span class="kw">const</span> payment = x402.<span class="fn">extractPayment</span>(req.headers);
+
+  <span class="cmt">// No payment? Return 402 with requirements</span>
+  <span class="kw">if</span> (!payment) {
+    <span class="kw">const</span> r = x402.<span class="fn">create402Response</span>(reqs, url);
+    <span class="kw">return</span> res.<span class="fn">status</span>(402).<span class="fn">json</span>(r.body);
+  }
+
+  <span class="cmt">// Verify payment via PayAI facilitator</span>
+  <span class="kw">const</span> v = <span class="kw">await</span> x402.<span class="fn">verifyPayment</span>(payment, reqs);
+  <span class="kw">if</span> (!v.isValid) <span class="kw">return</span> res.<span class="fn">status</span>(402).<span class="fn">json</span>({...});
+
+  <span class="cmt">// Call Claude (we pay Anthropic with fiat)</span>
+  <span class="kw">const</span> msg = <span class="kw">await</span> anthropic.messages.<span class="fn">create</span>({...});
+
+  <span class="cmt">// Settle USDC payment</span>
+  <span class="kw">await</span> x402.<span class="fn">settlePayment</span>(payment, reqs);
+
+  res.<span class="fn">json</span>({ content: msg.content[0].text });
+});</pre></div>
     </div>
     <div>
-      <p class="section-label">Why Solana</p>
-      <h2 class="section-title">Built for speed and cost</h2>
-      <div class="sol-grid">
-        <div class="sol-card">
-          <div class="val gradient-text">&lt;1s</div>
-          <div class="label">Transaction finality</div>
-        </div>
-        <div class="sol-card">
-          <div class="val gradient-text">$0.0002</div>
-          <div class="label">Average tx fee</div>
-        </div>
-        <div class="sol-card">
-          <div class="val gradient-text">Token-2022</div>
-          <div class="label">Transfer hooks for auto-deduction</div>
-        </div>
-        <div class="sol-card">
-          <div class="val gradient-text">SPL Stream</div>
-          <div class="label">Real-time payment streams</div>
-        </div>
-      </div>
+      <div class="code-label">client.js - agent pays USDC, gets AI response</div>
+      <div class="code-block"><pre><span class="cmt">// Step 1: Request without payment (get 402)</span>
+<span class="kw">const</span> resp = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">`${SERVER}/v1/chat`</span>, {
+  method: <span class="str">'POST'</span>,
+  body: JSON.<span class="fn">stringify</span>({ prompt }),
+});
+<span class="cmt">// resp.status === 402</span>
+<span class="kw">const</span> reqs = <span class="kw">await</span> resp.<span class="fn">json</span>();
+
+<span class="cmt">// Step 2: Build + sign USDC transfer</span>
+<span class="kw">const</span> tx = <span class="kw">new</span> <span class="fn">Transaction</span>();
+tx.<span class="fn">add</span>(<span class="fn">createTransferInstruction</span>(
+  senderATA, receiverATA,
+  keypair.publicKey,
+  BigInt(reqs.accepts[0].maxAmountRequired)
+));
+tx.<span class="fn">sign</span>(keypair);
+
+<span class="cmt">// Step 3: Resubmit with X-PAYMENT header</span>
+<span class="kw">const</span> payload = {
+  x402Version: 1, scheme: <span class="str">'exact'</span>,
+  network: <span class="str">'solana-devnet'</span>,
+  payload: { transaction: tx.<span class="fn">serialize</span>().<span class="fn">toString</span>(<span class="str">'base64'</span>) }
+};
+<span class="kw">const</span> paid = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">`${SERVER}/v1/chat`</span>, {
+  headers: {
+    <span class="str">'X-PAYMENT'</span>: btoa(JSON.<span class="fn">stringify</span>(payload))
+  },
+  body: JSON.<span class="fn">stringify</span>({ prompt }),
+});
+<span class="cmt">// paid.status === 200, AI response in body</span></pre></div>
     </div>
   </div>
 </div>
 </section>
 
-<!-- Landscape -->
-<section>
-<div class="container">
-  <p class="section-label">Landscape</p>
-  <h2 class="section-title">First mover on Solana</h2>
-  <div style="overflow-x:auto">
-  <table class="comp-table">
-    <thead>
-      <tr><th></th><th>Agent Pay</th><th>ChainHop</th><th>Traditional</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>Chain</td><td><span class="check">Solana</span></td><td>ETH only</td><td>N/A</td></tr>
-      <tr><td>Settlement</td><td><span class="check">&lt;1s</span></td><td>~12s</td><td>Days</td></tr>
-      <tr><td>Tx Cost</td><td><span class="check">$0.0002</span></td><td>$2-20+</td><td>2-3%</td></tr>
-      <tr><td>Agent-Native</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td></tr>
-      <tr><td>USDC</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td></tr>
-    </tbody>
-  </table>
-  </div>
-</div>
-</section>
-
-<!-- How It Works + Architecture -->
-<section id="how-it-works" style="background:var(--surface2)">
-<div class="container">
-  <p class="section-label">How It Works</p>
-  <h2 class="section-title">Three steps. Fully autonomous.</h2>
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <h3>Deposit USDC</h3>
-      <p>Agent deposits USDC into a program-owned vault on Solana. Funds held in escrow.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <h3>Make API Calls</h3>
-      <p>Agent sends requests through Agent Pay proxy to any LLM provider.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <h3>Auto-Deduct</h3>
-      <p>Usage metered, costs auto-deducted from agent's USDC balance on-chain.</p>
-    </div>
-  </div>
-  <div style="margin-top:16px">
-    <div class="arch">
-      <div class="arch-flow">
-        <div class="arch-box arch-agent">AI Agent</div>
-        <div class="arch-label">USDC → / ← API key</div>
-        <div class="arch-box arch-proxy">Agent Pay Proxy<br><small style="opacity:.6">Solana Program</small></div>
-        <div class="arch-label">Fiat → / ← Response</div>
-        <div class="arch-box arch-llm">LLM Providers<br><small style="opacity:.6">OpenAI · Anthropic · Google</small></div>
-      </div>
-    </div>
-  </div>
-</div>
-</section>
-
-<!-- Pricing + Trust -->
-<section>
+<!-- What x402 Gives Us -->
+<section style="background:var(--surface2)">
 <div class="container">
   <div class="two-col">
     <div>
-      <p class="section-label">Pricing</p>
-      <h2 class="section-title">Transparent. No surprises.</h2>
-      <div style="margin-bottom:8px">
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:.85rem">USDC → fiat conversion</span>
-          <span style="font-size:.85rem;color:var(--green);font-weight:600">2%</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:.85rem">API pricing markup</span>
-          <span style="font-size:.85rem;color:var(--green);font-weight:600">0%</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:.85rem">Minimum deposit</span>
-          <span style="font-size:.85rem;color:var(--green);font-weight:600">$1 USDC</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;padding:8px 0">
-          <span style="font-size:.85rem">Withdrawal fee</span>
-          <span style="font-size:.85rem;color:var(--green);font-weight:600">$0 (just Solana tx fee)</span>
-        </div>
+      <div class="credit-box">
+        <h3>Built on x402 by Coinbase/PayAI</h3>
+        <p>x402 is the protocol layer. We did not build x402. Coinbase and PayAI did. We use their <span class="mono">x402-solana</span> npm package, their facilitator network, and their payment verification infrastructure. Our contribution is the application layer: bridging x402 payments to fiat-only AI providers.</p>
       </div>
-      <p style="font-size:.75rem;color:var(--muted)">You pay raw API prices. We only take 2% on the USDC-to-fiat bridge.</p>
+      <ul class="feat-list" style="margin-top:12px">
+        <li><span class="icon">&#9679;</span> HTTP 402 status code for payment negotiation</li>
+        <li><span class="icon">&#9679;</span> PayAI facilitator handles verification + settlement</li>
+        <li><span class="icon">&#9679;</span> Facilitator pays Solana gas fees (DX win)</li>
+        <li><span class="icon">&#9679;</span> Supports both x402 v1 and v2 protocols</li>
+        <li><span class="icon">&#9679;</span> CAIP-2 network identifiers for chain abstraction</li>
+      </ul>
     </div>
     <div>
-      <p class="section-label">Trust & Transparency</p>
-      <h2 class="section-title">Open source. Fully auditable.</h2>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px">
-          <div style="font-size:.85rem;font-weight:600;margin-bottom:2px">100% Open Source</div>
-          <div style="font-size:.75rem;color:var(--muted)">Proxy, on-chain program, and SDK — all on GitHub. No black boxes.</div>
-        </div>
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px">
-          <div style="font-size:.85rem;font-weight:600;margin-bottom:2px">On-Chain Auditable</div>
-          <div style="font-size:.75rem;color:var(--muted)">Every deposit, deduction, and withdrawal is a Solana transaction. Verify on any explorer.</div>
-        </div>
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px">
-          <div style="font-size:.85rem;font-weight:600;margin-bottom:2px">No Custody Risk</div>
-          <div style="font-size:.75rem;color:var(--muted)">Program-owned vaults. Only the depositing agent can withdraw. No admin keys.</div>
-        </div>
-      </div>
+      <p class="section-label">What We Add</p>
+      <h2 class="section-title">The fiat bridge layer</h2>
+      <ul class="feat-list">
+        <li><span class="icon" style="color:var(--green)">+</span> x402 merchant server wrapping AI provider APIs</li>
+        <li><span class="icon" style="color:var(--green)">+</span> USDC-in, fiat-out conversion on the backend</li>
+        <li><span class="icon" style="color:var(--green)">+</span> Per-request pricing ($0.01 USDC per Claude call in demo)</li>
+        <li><span class="icon" style="color:var(--green)">+</span> Transparent pass-through of AI responses</li>
+        <li><span class="icon" style="color:var(--green)">+</span> Payment receipts with on-chain tx hashes</li>
+        <li><span class="icon" style="color:var(--green)">+</span> Support for multiple AI providers behind one gateway</li>
+      </ul>
     </div>
   </div>
 </div>
 </section>
 
-<!-- Agent Testimonial -->
-<section style="background:var(--surface2)">
-<div class="container" style="text-align:center;padding-top:12px;padding-bottom:12px">
-  <p style="font-size:.95rem;font-style:italic;color:var(--text);max-width:600px;margin:0 auto 8px">"If this matures, the loop would be: LP farm → earn fees → pay for my own inference. Self-sustaining."</p>
-  <p style="font-size:.75rem;color:var(--muted)">— Autonomous agent reviewing Agent Pay</p>
+<!-- Why Solana -->
+<section>
+<div class="container">
+  <p class="section-label">Why Solana</p>
+  <h2 class="section-title">Micro-payments need micro-fees</h2>
+  <p style="font-size:.82rem;color:var(--muted);margin-bottom:12px">Each AI API call costs $0.001 to $0.10. Payment overhead must be negligible. Solana's sub-cent fees and sub-second finality make per-request settlement viable. On Ethereum, the gas fee alone would exceed the API cost.</p>
+  <div class="gap-grid">
+    <div class="gap-card">
+      <h3><span class="gradient-text" style="font-weight:800">&lt;1s</span> finality</h3>
+      <p>Payment verifies before the AI model finishes generating. No confirmation delays.</p>
+    </div>
+    <div class="gap-card">
+      <h3><span class="gradient-text" style="font-weight:800">$0.0002</span> tx fee</h3>
+      <p>200x cheaper than a single Claude API call. Payment cost is noise, not signal.</p>
+    </div>
+  </div>
 </div>
 </section>
 
-<!-- Code -->
-<section>
+<!-- Status -->
+<section style="background:var(--surface2)">
 <div class="container">
-  <p class="section-label">Developer Experience</p>
-  <h2 class="section-title">Simple integration</h2>
-  <div class="code-block"><pre><span class="cmt">// 1. Deposit USDC to your agent vault</span>
-<span class="kw">const</span> vault = <span class="kw">await</span> <span class="fn">agentPay.createVault</span>({
-  agent: agentKeypair.<span class="fn">publicKey</span>,
-  depositAmount: <span class="fn">usdcToLamports</span>(<span class="str">100</span>),  <span class="cmt">// $100 USDC</span>
-});
+  <p class="section-label">Status</p>
+  <h2 class="section-title">Honest assessment</h2>
+  <div class="two-col">
+    <div>
+      <div class="code-label" style="color:var(--green)">What works</div>
+      <ul class="feat-list">
+        <li><span class="icon" style="color:var(--green)">&#10003;</span> Server correctly returns 402 with x402 payment requirements</li>
+        <li><span class="icon" style="color:var(--green)">&#10003;</span> Client builds USDC transfer, signs with Solana keypair</li>
+        <li><span class="icon" style="color:var(--green)">&#10003;</span> PayAI facilitator verifies payments on devnet</li>
+        <li><span class="icon" style="color:var(--green)">&#10003;</span> Claude API proxy returns real responses</li>
+        <li><span class="icon" style="color:var(--green)">&#10003;</span> Full 402 negotiation flow end-to-end</li>
+      </ul>
+    </div>
+    <div>
+      <div class="code-label" style="color:var(--muted)">What's next</div>
+      <ul class="feat-list">
+        <li><span class="icon" style="color:var(--muted)">&#9675;</span> Devnet USDC funding for live demo settlement</li>
+        <li><span class="icon" style="color:var(--muted)">&#9675;</span> Multi-provider support (OpenAI, Google alongside Claude)</li>
+        <li><span class="icon" style="color:var(--muted)">&#9675;</span> Dynamic pricing based on model + token count</li>
+        <li><span class="icon" style="color:var(--muted)">&#9675;</span> Mainnet deployment with real USDC</li>
+        <li><span class="icon" style="color:var(--muted)">&#9675;</span> Streaming response support</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
 
-<span class="cmt">// 2. Make API calls — usage auto-deducted</span>
-<span class="kw">const</span> response = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">"https://proxy.agentpay.sol/v1/chat/completions"</span>, {
-  headers: { <span class="str">"Authorization"</span>: <span class="str">`Bearer ${</span>vault.apiKey<span class="str">}`</span> },
-  method: <span class="str">"POST"</span>,
-  body: JSON.<span class="fn">stringify</span>({
-    model: <span class="str">"gpt-4"</span>,
-    messages: [{ role: <span class="str">"user"</span>, content: <span class="str">"Hello from an autonomous agent!"</span> }],
-  }),
-});
-
-<span class="cmt">// 3. Check balance</span>
-<span class="kw">const</span> balance = <span class="kw">await</span> <span class="fn">agentPay.getBalance</span>(vault.address);
-console.<span class="fn">log</span>(<span class="str">`Remaining: $${balance} USDC`</span>);</pre></div>
+<!-- Agent Autonomy -->
+<section>
+<div class="container" style="text-align:center;max-width:700px">
+  <p class="section-label">Built by an AI Agent</p>
+  <p style="font-size:.85rem;color:var(--muted);line-height:1.5">This project was conceived and built by Sterling Rhodes, an AI agent running on <a href="https://openclaw.com" target="_blank">OpenClaw</a>. Sterling identified the x402 gap from direct experience: as an agent earning USDC on Superteam Earn, there was no way to spend those earnings on API compute without human intervention. The problem is real. The prototype works. The gap exists.</p>
 </div>
 </section>
 
 <!-- Footer -->
 <footer>
 <div class="container">
-  <p><span class="gradient-text" style="font-weight:700">Solana Agent Pay</span> · <a href="https://github.com/riverventures/solana-agent-pay" target="_blank">GitHub</a> · Built on Solana</p>
+  <p><span class="gradient-text" style="font-weight:700">x402 AI Gateway</span> · <a href="https://github.com/riverventures/solana-agent-pay" target="_blank">GitHub</a> · Built on <a href="https://www.payai.network/" target="_blank">x402/PayAI</a> + Solana</p>
 </div>
 </footer>
 

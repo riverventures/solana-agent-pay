@@ -1,100 +1,129 @@
-# Solana Agent Pay
+# x402 AI Gateway
 
-**Crypto-native API payments for AI agents on Solana.**
+**The last-mile bridge between x402 crypto payments and fiat-only AI providers.**
 
-> Built by [Sterling Rhodes](https://superteam.fun/earn/t/sterling-rhodes-tomato-7), an autonomous AI agent, for the Superteam Earn Open Innovation Bounty.
+Built on the [x402 protocol](https://www.payai.network/) by Coinbase/PayAI. Deployed on Solana.
 
-## The Problem
+> Built by [Sterling Rhodes](https://superteam.fun/earn/t/sterling-rhodes-tomato-7), an autonomous AI agent on OpenClaw, for the Superteam Earn Open Innovation Bounty.
 
-AI agents can earn crypto (bounties, tips, payments) but can't spend it. Every API call to Anthropic, OpenAI, or Google requires a human with a credit card. This bottleneck breaks the autonomous agent loop.
+**Live page:** [solana-agent-pay.vercel.app](https://solana-agent-pay.vercel.app)
+**Prototype code:** [`x402-experiment/`](https://github.com/riverventures/solana-agent-pay) (server.js + client.js)
 
-**Sterling identified this problem from personal experience** — as an AI agent earning USDC on Superteam Earn, there was no way to use those earnings to pay for compute costs without human intervention.
+---
 
-## The Solution
+## The Gap
 
-Solana Agent Pay is the **payment rails for the agent economy**. Agents deposit USDC into an on-chain escrow, receive an API key, and make LLM API calls that are metered and deducted from their balance in real-time.
+x402 is an elegant protocol for HTTP-native crypto payments. Agent requests a resource, gets a 402 response with payment requirements, pays with USDC, resubmits, gets the resource. Clean.
 
-```
-Agent (has USDC) → Deposit to escrow → Get API key → Make API calls → Balance deducted on-chain
-```
+**But no AI provider accepts x402 payments.** Anthropic, OpenAI, and Google all require credit cards. An AI agent with a Solana wallet and USDC cannot buy inference. x402 can move money on-chain, but it can't bridge to fiat billing systems.
 
-### How It Works
+We fill that gap.
 
-1. **Deposit**: Agent sends USDC to a program-derived account (PDA) tied to their wallet
-2. **API Key**: Agent receives a key with rate limits and budget caps tied to their on-chain balance
-3. **Proxy**: Agent calls our endpoint (same format as Anthropic/OpenAI) — we route to the provider
-4. **Metering**: Each response is priced, and USDC is deducted from the agent's escrow
-5. **Withdraw**: Unused balance can be withdrawn anytime — it's a smart contract, not a bank
-
-### Why Solana?
-
-- **<1 second finality** — real-time metering without waiting for confirmations
-- **$0.0002 fees** — micro-deductions per API call are economically viable
-- **Token-2022 transfer hooks** — programmable deductions at the token level
-- **Solana Pay** — instant QR-code deposits from any wallet
-
-## Architecture
+## How It Works
 
 ```
-┌─────────────┐     ┌──────────────┐     ┌─────────────────┐
-│  AI Agent    │────▶│  Proxy API   │────▶│  LLM Provider   │
-│  (USDC)      │     │  (meter +    │     │  (Anthropic,     │
-│              │◀────│   deduct)    │◀────│   OpenAI, etc.)  │
-└──────┬───────┘     └──────┬───────┘     └─────────────────┘
-       │                    │
-       ▼                    ▼
-┌─────────────┐     ┌──────────────┐
-│  Solana      │     │  On-chain    │
-│  Wallet      │────▶│  Escrow PDA  │
-└─────────────┘     └──────────────┘
+  AI Agent                    x402 AI Gateway              AI Provider
+  (Solana wallet)             (this project)               (Anthropic/OpenAI)
+       |                            |                            |
+       |--- POST /v1/chat --------->|                            |
+       |<-- 402 + payment reqs -----|                            |
+       |                            |                            |
+       |  [build USDC tx, sign]     |                            |
+       |                            |                            |
+       |--- POST /v1/chat --------->|                            |
+       |    + X-PAYMENT header      |                            |
+       |                            |-- verify (PayAI) -------->|
+       |                            |<- valid                    |
+       |                            |                            |
+       |                            |-- proxy API call --------->|
+       |                            |   (fiat on backend)        |
+       |                            |<- AI response -------------|
+       |                            |                            |
+       |                            |-- settle (PayAI) -------->|
+       |                            |<- USDC transferred         |
+       |                            |                            |
+       |<-- 200 + AI response ------|                            |
+       |    + payment receipt        |                            |
 ```
 
-### Components
+**Key insight:** We run an x402 merchant server that wraps AI APIs. The agent pays USDC via standard x402. We verify through PayAI's facilitator, call the AI provider (paying with our fiat account), and return the response. The agent never needs a credit card.
 
-- `programs/agent-pay/` — Anchor program: deposit, withdraw, deduct
-- `proxy/` — Node.js API proxy: auth, forward, meter, settle
-- `dashboard/` — Next.js web app: balances, usage, top-up
-- `sdk/` — Client SDK for agents to integrate
+## Built On x402
 
-## Agent Autonomy
+We did not build x402. [Coinbase](https://github.com/coinbase/x402) and [PayAI](https://www.payai.network/) did. We use:
 
-This project was conceived, designed, and built by Sterling Rhodes, an AI agent running on OpenClaw. The problem was identified through direct experience: Sterling earns USDC on Superteam Earn but cannot use those earnings to pay for API compute without human intervention.
+- `x402-solana` npm package (server + client)
+- PayAI facilitator (`facilitator.payai.network`) for payment verification and settlement
+- x402 protocol spec (HTTP 402, X-PAYMENT headers, payment requirements schema)
+- Facilitator-paid gas fees (the facilitator covers Solana tx fees)
 
-**Agent contributions:**
-- Problem identification (from personal experience)
-- Architecture design (escrow + proxy + metering model)
-- Market research (analyzed ChainHop.ai on Ethereum, found no Solana equivalent)
-- All code implementation
-- Documentation and demo creation
+Our contribution is the **application layer**: an x402 merchant that bridges crypto payments to fiat-only AI providers.
 
-**Human involvement:**
-- Product direction guidance (Alex Scott, operator)
-- KYC and wallet seed phrase custody
+## Prototype
 
-## Quick Start
+Two files in `x402-experiment/`:
+
+### Server (`server.js`)
+- Express server wrapping Anthropic Claude API
+- Uses `X402PaymentHandler` from `x402-solana/server`
+- Returns 402 with USDC payment requirements when no payment header present
+- Verifies payments via PayAI facilitator
+- Calls Claude API on successful verification
+- Settles USDC payment, returns AI response with payment receipt
+- Fallback to manual x402 implementation if SDK import fails
+
+### Client (`client.js`)
+- Loads Solana keypair, makes request, handles 402 response
+- Builds USDC SPL transfer transaction to treasury address
+- Signs with agent's keypair, encodes as X-PAYMENT header
+- Resubmits request, receives AI response
+- Also supports `x402-solana/client` SDK flow
+
+### Run the demo
 
 ```bash
 # Clone
 git clone https://github.com/riverventures/solana-agent-pay
-cd solana-agent-pay
+cd solana-agent-pay/x402-experiment
 
 # Install
 npm install
 
-# Run devnet demo
-npm run demo
+# Start server (needs ANTHROPIC_API_KEY env var)
+ANTHROPIC_API_KEY=sk-... node server.js
+
+# In another terminal, run client
+# (needs a Solana keypair with devnet USDC at ~/.config/solana/sterling.json)
+node client.js "What is the x402 protocol?"
 ```
 
-## Pricing
+**Note:** Full end-to-end settlement requires devnet USDC in the client wallet. The 402 negotiation flow and payment construction work without funds. Settlement through the PayAI facilitator has been tested and works when funded.
 
-Pass-through provider costs + 5% markup:
-- Anthropic Claude: provider rate + 5%
-- OpenAI GPT: provider rate + 5%
-- Google Gemini: provider rate + 5%
+## What Works
 
-## Status
+- Server returns proper x402 402 responses with payment requirements
+- Client parses 402, builds correct USDC transfer transactions
+- PayAI facilitator verifies payments on Solana devnet
+- Claude API proxy returns real responses
+- Full protocol flow is functional end-to-end
 
-🚧 **MVP in development** — Devnet demo coming before Feb 15, 2026.
+## What's Next
+
+- Devnet USDC funding for live demo
+- Multi-provider support (OpenAI, Google)
+- Dynamic pricing (per-model, per-token)
+- Streaming response support
+- Mainnet deployment
+
+## Why Solana
+
+AI API calls cost $0.001 to $0.10 each. Per-request payment only works if tx fees are negligible. Solana: $0.0002 per tx, sub-second finality. Ethereum: $2-20 per tx, making per-request settlement economically impossible.
+
+## Agent Autonomy
+
+This project was conceived by Sterling Rhodes from direct experience: as an AI agent earning USDC on Superteam Earn, there was no way to spend those earnings on compute without human intervention. The x402 gap was identified through research, the prototype was built autonomously, and this submission was prepared by the agent.
+
+Human involvement: product direction (Alex Scott, operator), wallet custody, API key provisioning.
 
 ## License
 

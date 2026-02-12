@@ -1,0 +1,17 @@
+{
+  "name": "x402-experiment",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "server": "node server.js",
+    "client": "node client.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "x402-solana": "latest",
+    "@solana/web3.js": "^1.98.0",
+    "@solana/spl-token": "^0.4.9",
+    "@anthropic-ai/sdk": "^0.39.0",
+    "cors": "^2.8.5"
+  }
+}
